@@ -1,4 +1,4 @@
-# Digital Signal Processing with Mojo language
+# Digital Signal Processing with Mojo language (dsplib)
 
 This repository is an educational source on implementing digital
 signal processing functions in Mojo language. The language itself
