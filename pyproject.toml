@@ -1,0 +1,16 @@
+[project]
+name = "intro-dsp"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+requires-python = ">=3.14"
+dependencies = [
+    "matplotlib>=3.10.8",
+    "mojo>=0.26.2.0",
+    "numpy>=2.4.3",
+    "scipy>=1.17.1",
+]
+
+[[tool.uv.index]]
+url = "https://modular.gateway.scarf.sh/simple/"
+
