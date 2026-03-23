@@ -3,29 +3,53 @@ from std.memory import alloc
 from std.random import rand, randn
 
 @fieldwise_init
+struct WaveConfig(ImplicitlyCopyable):
+  """
+  Holds the configuration of wave function generators.
+  """
+  # Signal Parameters
+  var frequency_hz: Float64
+  var amplitude: Float64
+  var phase_rad: Float64
+  var offset: Float64
+  # Quantization Parameters
+  var sample_rate_ss: Float64
+  # Time Parameters
+  var duration_s: Float64
+
+  def get_angular_frequency(self) -> Float64:
+    """Calculate and return sample rate in radians/seconds."""
+    return 2.0 * pi * self.frequency_hz / self.sample_rate_ss 
+
+  def get_number_of_samples(self) -> Int:
+    """Calculate and return number of samples."""
+    return Int(self.sample_rate_ss * self.duration_s)
+
+
+@fieldwise_init
 struct SineWave:
     """A struct to calculate sin waves with SIMD."""
 
     var samples: UnsafePointer[Float64, MutExternalOrigin]
-    var angular_freq: Float64
+    var wave_config: WaveConfig
 
     @always_inline
     fn generate[width: Int](self, i: Int):
         var indices: SIMD[DType.float64, width] = iota[DType.float64, width]() + Float64(i)
-        var values = sin(indices * self.angular_freq)
+        # Calculate the value as := A*sin(indices*omega + phi) + DC
+        var values = \
+            self.wave_config.amplitude * \
+            sin(indices * self.wave_config.get_angular_frequency() + self.wave_config.phase_rad) + \
+            self.wave_config.offset
         self.samples.store(i, values)
 
 
-def generate_sine_wave_raw(
-    frequency: Float64, sample_rate: Float64, duration: Float64
-) -> UnsafePointer[Float64, MutExternalOrigin]:
+def generate_sine_wave_raw(wave_config: WaveConfig) -> UnsafePointer[Float64, MutExternalOrigin]:
     """
     This function generates Sine waves using CPU's SIMD instructions.
 
     Params:
-      frequency (Float64): in Hertz.
-      sample_rate (Float64): in samples/seconds
-      duration (Float64): in seconds.
+      wave_config: A WaveConfig struct that holds signal parameters.
 
     Returns:
       An array of int(sample_rate * duration) items.
@@ -34,18 +58,13 @@ def generate_sine_wave_raw(
     # Amount of samples to calculate the wave.
     # sample_rate := samples/second
     # duration := seconds
-    var num_samples: Int = Int(sample_rate * duration)
-
-    # Calculate angular frequency (in radians).
-    # sample_rate := samples/second
-    # frequency := 1/second
-    var angular_freq = 2.0 * pi * frequency / sample_rate
+    var num_samples: Int = wave_config.get_number_of_samples()
 
     # Allocate heap array.
     var samples = alloc[Float64](num_samples)
 
     # Initialize the struct with the allocated memory and frequency.
-    var wave = SineWave(samples, angular_freq)
+    var wave = SineWave(samples, wave_config)
 
     # How many parallelization we want from SIMD. Must be a power of 2.
     comptime simd_width = 8

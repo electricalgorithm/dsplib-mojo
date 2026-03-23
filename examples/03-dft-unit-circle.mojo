@@ -119,15 +119,21 @@ def main() raises:
     print("Example 03: DFT and the Unit Circle")
     print("=" * 40)
 
-    var sample_rate: Float64 = 44100.0
-    var duration = 0.01
+    var config = dsplib.WaveConfig(
+        frequency_hz=882.0,
+        amplitude=1.0,
+        phase_rad=0.0,
+        offset=0.0,
+        sample_rate_ss=44100.0,
+        duration_s=0.01,
+    )
     var N = 16
 
     print("\n1. Visualizing DFT basis vectors (unit circle sampling)...")
     plot_dft_basis_vectors(N, "dft_unit_circle.png")
 
     print("\n2. Generating a simple sine wave (2 complete cycles in N samples)...")
-    var wave = dsplib.generate_sine_wave_raw(882.0, sample_rate, duration)
+    var wave = dsplib.generate_sine_wave_raw(config)
     dsplib.plot_wave(wave, N, "wave_time_domain.png")
 
     print("\n3. Computing DFT to get frequency bins...")
@@ -139,7 +145,7 @@ def main() raises:
     plot_dft_phasors(dft_result, N, "dft_phasors.png")
 
     print("\n5. Standard frequency spectrum for comparison...")
-    dsplib.plot_frequency_domain(dft_result, N, sample_rate, "dft_frequency_spectrum.png")
+    dsplib.plot_frequency_domain(dft_result, N, config.sample_rate_ss, "dft_frequency_spectrum.png")
 
     print("\n6. Highlighting specific frequency bins...")
     var indices = alloc[Int](2)
@@ -154,8 +160,8 @@ def main() raises:
     print("Generated files:")
     print("  - dft_unit_circle.png        : The N sampling points on unit circle")
     print("  - wave_time_domain.png       : Time-domain signal")
-    print("  - dft_phasors.png            : DFT bins as phasors")
-    print("  - dft_frequency_spectrum.png : Magnitude vs frequency")
+    print("  - dft_phasors.png           : DFT bins as phasors")
+    print("  - dft_frequency_spectrum.png: Magnitude vs frequency")
     print("  - dft_phasors_highlighted.png: Same with key bins highlighted")
     print("\nThe DFT is essentially asking:")
     print("'How much does my signal correlate with each spinning probe?'")

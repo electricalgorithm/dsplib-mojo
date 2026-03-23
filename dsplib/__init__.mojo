@@ -1,5 +1,6 @@
 from .core import Complex
 from .waves import (
+    WaveConfig,
     generate_sine_wave_raw,
     generate_random_normal_noise_raw,
     generate_random_uniform_noise_raw,
