@@ -19,7 +19,9 @@ def compute_dft_raw(
     Returns:
       UnsafePointer[Complex, MutExternalOrigin]: An array of complex frequency components.
     """
-    var results: UnsafePointer[Complex, MutExternalOrigin] = alloc[Complex](num_samples)
+    var results: UnsafePointer[Complex, MutExternalOrigin] = alloc[Complex](
+        num_samples
+    )
 
     # Outer loop 'k' iterates through each "Frequency Bin".
     # Each bin represents a specific frequency in the signal.
@@ -31,7 +33,9 @@ def compute_dft_raw(
         for n in range(num_samples):
             # Calculate the angle for this twiddle factor: W_N^(kn) = e^(-j*2π*k*n/N)
             # This is a point on the unit circle, rotating based on k and n.
-            var angle = -2.0 * pi * Float64(k) * Float64(n) / Float64(num_samples)
+            var angle = (
+                -2.0 * pi * Float64(k) * Float64(n) / Float64(num_samples)
+            )
 
             # Polar form: radius=1 (unit circle), theta=angle
             # This is equivalent to Complex(cos(angle), sin(angle))
@@ -43,7 +47,7 @@ def compute_dft_raw(
 
         # Store the result for this frequency bin.
         # Large magnitude = this frequency is strong in the signal.
-        results[k] = sum ^
+        results[k] = sum^
 
     return results
 
@@ -65,7 +69,9 @@ def compute_idft_raw(
     Returns:
       UnsafePointer[Complex, MutExternalOrigin]: An array of complex time-domain samples.
     """
-    var results: UnsafePointer[Complex, MutExternalOrigin] = alloc[Complex](num_samples)
+    var results: UnsafePointer[Complex, MutExternalOrigin] = alloc[Complex](
+        num_samples
+    )
 
     # Outer loop 'n' iterates through each point in "Time".
     # We're reconstructing what the signal looks like at each time instant.
@@ -77,7 +83,9 @@ def compute_idft_raw(
         for k in range(num_samples):
             # Calculate the angle for reconstruction: W_N^(kn) = e^(j*2π*k*n/N)
             # Note: positive sign here (opposite of DFT) for reconstruction.
-            var angle = 2.0 * pi * Float64(k) * Float64(n) / Float64(num_samples)
+            var angle = (
+                2.0 * pi * Float64(k) * Float64(n) / Float64(num_samples)
+            )
 
             # Polar form: radius=1 (unit circle), theta=angle
             var twiddle = Complex(1.0, angle, True)
@@ -88,6 +96,6 @@ def compute_idft_raw(
 
         # Final step: Normalize by dividing by the total number of samples.
         # This is required because we summed N terms during reconstruction.
-        results[n] = (sum * (1.0 / Float64(num_samples))) ^
+        results[n] = (sum * (1.0 / Float64(num_samples)))^
 
     return results

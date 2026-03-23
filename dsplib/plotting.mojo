@@ -4,7 +4,9 @@ from .core import Complex
 
 
 def plot_wave(
-    wave: UnsafePointer[Float64, MutExternalOrigin], num_samples: Int, file_name: String
+    wave: UnsafePointer[Float64, MutExternalOrigin],
+    num_samples: Int,
+    file_name: String,
 ) raises:
     """
     Plots a time-domain signal.
@@ -89,7 +91,9 @@ def plot_unit_circle(
 
     plt.figure()
     var theta = np.linspace(0.0, 2.0 * pi, 100)
-    plt.plot(np.cos(theta), np.sin(theta), "b-", linewidth=1.0, label="Unit Circle")
+    plt.plot(
+        np.cos(theta), np.sin(theta), "b-", linewidth=1.0, label="Unit Circle"
+    )
     plt.plot(x, y, "ro", markersize=8)
     plt.axhline(y=0.0, color="k", linewidth=0.5)
     plt.axvline(x=0.0, color="k", linewidth=0.5)
@@ -134,7 +138,16 @@ def plot_complex_points(
     for i in range(num_points):
         var re = points[i].re
         var im = points[i].im
-        ax.arrow(0.0, 0.0, re, im, head_width=0.05, head_length=0.03, fc="blue", ec="blue")
+        ax.arrow(
+            0.0,
+            0.0,
+            re,
+            im,
+            head_width=0.05,
+            head_length=0.03,
+            fc="blue",
+            ec="blue",
+        )
 
     plt.axhline(y=0.0, color="k", linewidth=0.5)
     plt.axvline(x=0.0, color="k", linewidth=0.5)

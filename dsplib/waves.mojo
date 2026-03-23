@@ -2,28 +2,30 @@ from std.math import sin, pi, iota, align_down
 from std.memory import alloc
 from std.random import rand, randn
 
+
 @fieldwise_init
 struct WaveConfig(ImplicitlyCopyable):
-  """
-  Holds the configuration of wave function generators.
-  """
-  # Signal Parameters
-  var frequency_hz: Float64
-  var amplitude: Float64
-  var phase_rad: Float64
-  var offset: Float64
-  # Quantization Parameters
-  var sample_rate_ss: Float64
-  # Time Parameters
-  var duration_s: Float64
+    """
+    Holds the configuration of wave function generators.
+    """
 
-  def get_angular_frequency(self) -> Float64:
-    """Calculate and return sample rate in radians/seconds."""
-    return 2.0 * pi * self.frequency_hz / self.sample_rate_ss 
+    # Signal Parameters
+    var frequency_hz: Float64
+    var amplitude: Float64
+    var phase_rad: Float64
+    var offset: Float64
+    # Quantization Parameters
+    var sample_rate_ss: Float64
+    # Time Parameters
+    var duration_s: Float64
 
-  def get_number_of_samples(self) -> Int:
-    """Calculate and return number of samples."""
-    return Int(self.sample_rate_ss * self.duration_s)
+    def get_angular_frequency(self) -> Float64:
+        """Calculate and return sample rate in radians/seconds."""
+        return 2.0 * pi * self.frequency_hz / self.sample_rate_ss
+
+    def get_number_of_samples(self) -> Int:
+        """Calculate and return number of samples."""
+        return Int(self.sample_rate_ss * self.duration_s)
 
 
 @fieldwise_init
@@ -35,16 +37,24 @@ struct SineWave:
 
     @always_inline
     fn generate[width: Int](self, i: Int):
-        var indices: SIMD[DType.float64, width] = iota[DType.float64, width]() + Float64(i)
+        var indices: SIMD[DType.float64, width] = iota[
+            DType.float64, width
+        ]() + Float64(i)
         # Calculate the value as := A*sin(indices*omega + phi) + DC
-        var values = \
-            self.wave_config.amplitude * \
-            sin(indices * self.wave_config.get_angular_frequency() + self.wave_config.phase_rad) + \
-            self.wave_config.offset
+        var values = (
+            self.wave_config.amplitude
+            * sin(
+                indices * self.wave_config.get_angular_frequency()
+                + self.wave_config.phase_rad
+            )
+            + self.wave_config.offset
+        )
         self.samples.store(i, values)
 
 
-def generate_sine_wave_raw(wave_config: WaveConfig) -> UnsafePointer[Float64, MutExternalOrigin]:
+def generate_sine_wave_raw(
+    wave_config: WaveConfig,
+) -> UnsafePointer[Float64, MutExternalOrigin]:
     """
     Generates a sine wave using SIMD instructions.
 
@@ -72,7 +82,9 @@ def generate_sine_wave_raw(wave_config: WaveConfig) -> UnsafePointer[Float64, Mu
     return samples
 
 
-def generate_cosine_wave_raw(wave_config: WaveConfig) -> UnsafePointer[Float64, MutExternalOrigin]:
+def generate_cosine_wave_raw(
+    wave_config: WaveConfig,
+) -> UnsafePointer[Float64, MutExternalOrigin]:
     """
     Generates a cosine wave using SIMD instructions.
 
@@ -97,7 +109,10 @@ def generate_cosine_wave_raw(wave_config: WaveConfig) -> UnsafePointer[Float64, 
 
 
 def generate_random_normal_noise_raw(
-    sample_rate: Float64, duration: Float64, mean: Float64 = 0.0, std_dev: Float64 = 1.0
+    sample_rate: Float64,
+    duration: Float64,
+    mean: Float64 = 0.0,
+    std_dev: Float64 = 1.0,
 ) -> UnsafePointer[Float64, MutExternalOrigin]:
     """
     This function generates a white noise signal.
@@ -110,7 +125,9 @@ def generate_random_normal_noise_raw(
     """
     var num_samples = Int(sample_rate * duration)
     var samples = alloc[Float64](num_samples)
-    randn[DType.float64](samples, num_samples, mean=mean, standard_deviation=std_dev)
+    randn[DType.float64](
+        samples, num_samples, mean=mean, standard_deviation=std_dev
+    )
     return samples
 
 
@@ -150,7 +167,9 @@ def add_waves(
     Returns:
       UnsafePointer[Float64, MutExternalOrigin]: An array of a plus b.
     """
-    var result: UnsafePointer[Float64, MutExternalOrigin] = alloc[Float64](num_samples)
+    var result: UnsafePointer[Float64, MutExternalOrigin] = alloc[Float64](
+        num_samples
+    )
 
     # We do the same SIMD hack here as well.
     # For every 8 (SIMD Width) go with SIMD.

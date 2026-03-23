@@ -8,4 +8,9 @@ from .waves import (
     add_waves,
 )
 from .fourier import compute_dft_raw, compute_idft_raw
-from .plotting import plot_wave, plot_frequency_domain, plot_unit_circle, plot_complex_points
+from .plotting import (
+    plot_wave,
+    plot_frequency_domain,
+    plot_unit_circle,
+    plot_complex_points,
+)

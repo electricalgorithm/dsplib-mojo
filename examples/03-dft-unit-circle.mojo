@@ -20,7 +20,9 @@ fn plot_dft_basis_vectors(num_samples: Int, file_name: String) raises:
 
     plt.figure()
     var theta = np.linspace(0.0, 2.0 * pi, 100)
-    plt.plot(np.cos(theta), np.sin(theta), "b-", linewidth=1.0, label="Unit Circle")
+    plt.plot(
+        np.cos(theta), np.sin(theta), "b-", linewidth=1.0, label="Unit Circle"
+    )
     plt.plot(x, y, "ro", markersize=8, label="DFT Points")
 
     plt.axhline(y=0.0, color="k", linewidth=0.5)
@@ -45,7 +47,13 @@ fn plot_dft_phasors(
     plt.figure()
 
     var theta_circle = np.linspace(0.0, 2.0 * pi, 100)
-    plt.plot(np.cos(theta_circle), np.sin(theta_circle), "k--", linewidth=1.0, alpha=0.3)
+    plt.plot(
+        np.cos(theta_circle),
+        np.sin(theta_circle),
+        "k--",
+        linewidth=1.0,
+        alpha=0.3,
+    )
 
     var ax = plt.gca()
 
@@ -56,7 +64,15 @@ fn plot_dft_phasors(
 
         if mag > 0.01:
             ax.arrow(
-                0.0, 0.0, re, im, head_width=0.03, head_length=0.015, fc="blue", ec="blue", alpha=0.7
+                0.0,
+                0.0,
+                re,
+                im,
+                head_width=0.03,
+                head_length=0.015,
+                fc="blue",
+                ec="blue",
+                alpha=0.7,
             )
 
     plt.axhline(y=0.0, color="k", linewidth=0.5)
@@ -82,7 +98,13 @@ fn plot_dft_phasors_highlighted(
     plt.figure()
 
     var theta_circle = np.linspace(0.0, 2.0 * pi, 100)
-    plt.plot(np.cos(theta_circle), np.sin(theta_circle), "k--", linewidth=1.0, alpha=0.3)
+    plt.plot(
+        np.cos(theta_circle),
+        np.sin(theta_circle),
+        "k--",
+        linewidth=1.0,
+        alpha=0.3,
+    )
 
     var ax = plt.gca()
 
@@ -98,11 +120,27 @@ fn plot_dft_phasors_highlighted(
 
         if is_highlighted:
             ax.arrow(
-                0.0, 0.0, re, im, head_width=0.08, head_length=0.04, fc="red", ec="red", linewidth=2.5
+                0.0,
+                0.0,
+                re,
+                im,
+                head_width=0.08,
+                head_length=0.04,
+                fc="red",
+                ec="red",
+                linewidth=2.5,
             )
         elif mag > 0.01:
             ax.arrow(
-                0.0, 0.0, re, im, head_width=0.03, head_length=0.015, fc="blue", ec="blue", alpha=0.6
+                0.0,
+                0.0,
+                re,
+                im,
+                head_width=0.03,
+                head_length=0.015,
+                fc="blue",
+                ec="blue",
+                alpha=0.6,
             )
 
     plt.axhline(y=0.0, color="k", linewidth=0.5)
@@ -132,7 +170,9 @@ def main() raises:
     print("\n1. Visualizing DFT basis vectors (unit circle sampling)...")
     plot_dft_basis_vectors(N, "dft_unit_circle.png")
 
-    print("\n2. Generating a simple sine wave (2 complete cycles in N samples)...")
+    print(
+        "\n2. Generating a simple sine wave (2 complete cycles in N samples)..."
+    )
     var wave = dsplib.generate_sine_wave_raw(config)
     dsplib.plot_wave(wave, N, "wave_time_domain.png")
 
@@ -145,20 +185,26 @@ def main() raises:
     plot_dft_phasors(dft_result, N, "dft_phasors.png")
 
     print("\n5. Standard frequency spectrum for comparison...")
-    dsplib.plot_frequency_domain(dft_result, N, config.sample_rate_ss, "dft_frequency_spectrum.png")
+    dsplib.plot_frequency_domain(
+        dft_result, N, config.sample_rate_ss, "dft_frequency_spectrum.png"
+    )
 
     print("\n6. Highlighting specific frequency bins...")
     var indices = alloc[Int](2)
     indices[0] = 2
     indices[1] = N - 2
-    plot_dft_phasors_highlighted(dft_result, N, indices, 2, "dft_phasors_highlighted.png")
+    plot_dft_phasors_highlighted(
+        dft_result, N, indices, 2, "dft_phasors_highlighted.png"
+    )
     indices.free()
 
     dft_result.free()
 
     print("\n" + "=" * 40)
     print("Generated files:")
-    print("  - dft_unit_circle.png        : The N sampling points on unit circle")
+    print(
+        "  - dft_unit_circle.png        : The N sampling points on unit circle"
+    )
     print("  - wave_time_domain.png       : Time-domain signal")
     print("  - dft_phasors.png           : DFT bins as phasors")
     print("  - dft_frequency_spectrum.png: Magnitude vs frequency")
