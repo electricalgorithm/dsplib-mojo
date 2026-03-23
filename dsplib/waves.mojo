@@ -46,41 +46,54 @@ struct SineWave:
 
 def generate_sine_wave_raw(wave_config: WaveConfig) -> UnsafePointer[Float64, MutExternalOrigin]:
     """
-    This function generates Sine waves using CPU's SIMD instructions.
+    Generates a sine wave using SIMD instructions.
 
     Params:
       wave_config: A WaveConfig struct that holds signal parameters.
 
     Returns:
-      An array of int(sample_rate * duration) items.
+      An array of int(sample_rate * duration) samples.
     """
-
-    # Amount of samples to calculate the wave.
-    # sample_rate := samples/second
-    # duration := seconds
     var num_samples: Int = wave_config.get_number_of_samples()
 
-    # Allocate heap array.
     var samples = alloc[Float64](num_samples)
 
-    # Initialize the struct with the allocated memory and frequency.
     var wave = SineWave(samples, wave_config)
 
-    # How many parallelization we want from SIMD. Must be a power of 2.
     comptime simd_width = 8
 
-    # Instead of vectorize (which has closure/struct limitations in this version),
-    # we perform the SIMD loop manually for maximum performance.
     var simd_end = Int(align_down(UInt(num_samples), UInt(simd_width)))
     for i in range(0, simd_end, simd_width):
         wave.generate[simd_width](i)
 
-    # Handle the remaining samples (tail).
-    # We do not need to go with 4, 2 since 1 will be already fast.
     for i in range(simd_end, num_samples):
         wave.generate[1](i)
 
     return samples
+
+
+def generate_cosine_wave_raw(wave_config: WaveConfig) -> UnsafePointer[Float64, MutExternalOrigin]:
+    """
+    Generates a cosine wave using SIMD instructions.
+
+    Cosine is just sine with a +π/2 phase shift: cos(ωt) = sin(ωt + π/2)
+
+    Params:
+      wave_config: A WaveConfig struct that holds signal parameters.
+                   The phase_rad field will be offset by +π/2 internally.
+
+    Returns:
+      An array of int(sample_rate * duration) samples.
+    """
+    var cosine_config = WaveConfig(
+        wave_config.frequency_hz,
+        wave_config.amplitude,
+        wave_config.phase_rad + pi / 2.0,
+        wave_config.offset,
+        wave_config.sample_rate_ss,
+        wave_config.duration_s,
+    )
+    return generate_sine_wave_raw(cosine_config)
 
 
 def generate_random_normal_noise_raw(
