@@ -14,12 +14,12 @@ A structured learning path for mastering Digital Signal Processing fundamentals 
 - Master Euler's formula: $e^{j\omega} = \cos(\omega) + j\sin(\omega)$
 
 **Topics:**
-- [ ] Complex number struct (real, imaginary, magnitude, phase)
-- [ ] Complex addition, subtraction, multiplication, division
-- [ ] Complex conjugate and magnitude calculation
-- [ ] Polar form (r, θ) ↔ Cartesian form (x, y) conversion
-- [ ] Unit circle visualization
-- [ ] Phasor representation of sinusoidal signals
+- [X] Complex number struct (real, imaginary, magnitude, phase)
+- [X] Complex addition, subtraction, multiplication, division
+- [X] Complex conjugate and magnitude calculation
+- [X] Polar form (r, θ) ↔ Cartesian form (x, y) conversion
+- [X] Unit circle visualization
+- [X] Phasor representation of sinusoidal signals
 
 **Exercises:**
 - Implement complex exponential $e^{j\omega t}$
@@ -38,8 +38,8 @@ A structured learning path for mastering Digital Signal Processing fundamentals 
 - Learn about different noise distributions and their properties
 
 **Topics:**
-- [ ] Sine wave generation with SIMD acceleration
-- [ ] Cosine wave (phase-shifted sine)
+- [X] Sine wave generation with SIMD acceleration
+- [X] Cosine wave (phase-shifted sine)
 - [ ] Square wave (via sign function)
 - [ ] Sawtooth / triangle wave
 - [ ] Signal parameters: amplitude, frequency (Hz), phase, DC offset
