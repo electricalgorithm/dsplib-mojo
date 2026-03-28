@@ -40,13 +40,13 @@ A structured learning path for mastering Digital Signal Processing fundamentals 
 **Topics:**
 - [X] Sine wave generation with SIMD acceleration
 - [X] Cosine wave (phase-shifted sine)
-- [ ] Square wave (via sign function)
-- [ ] Sawtooth / triangle wave
-- [ ] Signal parameters: amplitude, frequency (Hz), phase, DC offset
+- [X] Square wave (via sign function)
+- [X] Sawtooth / triangle wave
+- [X] Signal parameters: amplitude, frequency (Hz), phase, DC offset
 - [ ] Time array generation (sampling instants)
 - [ ] Signal composition (adding multiple frequencies)
-- [ ] Normal (Gaussian) noise generation
-- [ ] Uniform noise generation
+- [X] Normal (Gaussian) noise generation
+- [X] Uniform noise generation
 - [ ] Signal-to-Noise Ratio (SNR) concepts
 - [ ] Adding noise to clean signals
 
@@ -68,8 +68,8 @@ A structured learning path for mastering Digital Signal Processing fundamentals 
 - Visualize frequency content of signals
 
 **Topics:**
-- [ ] Discrete Fourier Transform (DFT) — O(N²) implementation
-- [ ] Inverse DFT (IDFT) — signal reconstruction
+- [X] Discrete Fourier Transform (DFT) — O(N²) implementation
+- [X] Inverse DFT (IDFT) — signal reconstruction
 - [ ] Complex exponential basis functions $W_N^{kn} = e^{-j2\pi kn/N}$
 - [ ] Magnitude and phase spectra
 - [ ] Power spectrum and spectral energy
