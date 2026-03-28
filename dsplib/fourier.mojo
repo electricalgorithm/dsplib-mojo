@@ -99,3 +99,66 @@ def compute_idft_raw(
         results[n] = (sum * (1.0 / Float64(num_samples)))^
 
     return results
+
+
+fn compute_magnitude_spectrum(
+    dft_output: UnsafePointer[Complex, MutExternalOrigin],
+    num_samples: Int,
+) -> Tuple[UnsafePointer[Float64, MutExternalOrigin], Int]:
+    """
+    Extracts the magnitude spectrum from DFT output.
+
+    For real-valued input signals, the spectrum is symmetric around DC.
+    This function returns only the positive frequencies (0 to Nyquist).
+    Magnitudes are scaled by 2/N to account for negative frequency energy.
+
+    Params:
+        dft_output: Pointer to the complex DFT output.
+        num_samples: Number of samples in the original DFT.
+
+    Returns:
+        A tuple of (magnitudes, num_magnitudes).
+        Magnitudes are scaled: |X[k]| * 2/N for k > 0.
+        DC bin (k=0) is not scaled.
+        Caller must free the magnitudes pointer.
+    """
+    # We don't want to have complex conjugates.
+    var num_positive = num_samples // 2 + 1
+    var magnitudes = alloc[Float64](num_positive)
+
+    for i in range(num_positive):
+        var mag = dft_output[i].magnitude()
+        if i > 0:
+            mag = mag * 2.0 / Float64(num_samples)
+        magnitudes[i] = mag
+
+    return (magnitudes, num_positive)
+
+
+fn compute_phase_spectrum(
+    dft_output: UnsafePointer[Complex, MutExternalOrigin],
+    num_samples: Int,
+) -> Tuple[UnsafePointer[Float64, MutExternalOrigin], Int]:
+    """
+    Extracts the phase spectrum from DFT output.
+
+    For real-valued input signals, the phase spectrum is anti-symmetric around DC.
+    This function returns only the positive frequencies (0 to Nyquist).
+    Phase is in radians, in the range [-pi, pi].
+
+    Params:
+        dft_output: Pointer to the complex DFT output.
+        num_samples: Number of samples in the original DFT.
+
+    Returns:
+        A tuple of (phases, num_phases).
+        Phase is in radians [-pi, pi].
+        Caller must free the phases pointer.
+    """
+    var num_positive = num_samples // 2 + 1
+    var phases = alloc[Float64](num_positive)
+
+    for i in range(num_positive):
+        phases[i] = dft_output[i].phase()
+
+    return (phases, num_positive)

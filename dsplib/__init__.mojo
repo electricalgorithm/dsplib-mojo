@@ -22,7 +22,12 @@ from .waves import (
     generate_random_uniform_noise_raw,
     add_waves,
 )
-from .fourier import compute_dft_raw, compute_idft_raw
+from .fourier import (
+    compute_dft_raw,
+    compute_idft_raw,
+    compute_magnitude_spectrum,
+    compute_phase_spectrum,
+)
 from .plotting import (
     plot_wave,
     plot_frequency_domain,
