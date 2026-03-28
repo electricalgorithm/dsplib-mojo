@@ -43,12 +43,12 @@ A structured learning path for mastering Digital Signal Processing fundamentals 
 - [X] Square wave (via sign function)
 - [X] Sawtooth / triangle wave
 - [X] Signal parameters: amplitude, frequency (Hz), phase, DC offset
-- [ ] Time array generation (sampling instants)
-- [ ] Signal composition (adding multiple frequencies)
+- [X] Time array generation (sampling instants)
+- [X] Signal composition (adding multiple frequencies)
 - [X] Normal (Gaussian) noise generation
 - [X] Uniform noise generation
-- [ ] Signal-to-Noise Ratio (SNR) concepts
-- [ ] Adding noise to clean signals
+- [X] Signal-to-Noise Ratio (SNR) concepts
+- [X] Adding noise to clean signals
 
 **Exercises:**
 - Generate and plot 440 Hz sine wave (musical A)
