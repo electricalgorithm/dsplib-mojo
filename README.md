@@ -1,4 +1,4 @@
-# Introduction to Digital Signal Processing with Mojo
+# dsplib-mojo
 
 An educational Digital Signal Processing (DSP) library built with **Mojo**. This project is designed to teach the fundamentals of signal processing—such -- while leveraging Mojo's high-performance features like SIMD.
 
