@@ -1,16 +1,35 @@
 [project]
-name = "intro-dsp"
-version = "0.1.0"
-description = "Add your description here"
+name = "dsplib-mojo"
+version = "0.2.0"
+description = "A (educational) digital signal processing library built with Mojo."
 readme = "README.md"
-requires-python = ">=3.14"
+requires-python = ">=3.10"
+license = { text = "MIT" }
+authors = [
+    { name = "Gökhan Koçmarlı" }
+]
+keywords = ["dsp", "digital-signal-processing", "mojo", "fourier", "filters", "education"]
+classifiers = [
+    "Development Status :: 2 - Pre-Alpha",
+    "Intended Audience :: Education",
+    "License :: OSI Approved :: MIT License",
+    "Programming Language :: Mojo",
+    "Topic :: Scientific/Engineering :: Signal Processing",
+]
+
 dependencies = [
     "matplotlib>=3.10.8",
-    "mojo>=0.26.2.0",
     "numpy>=2.4.3",
     "scipy>=1.17.1",
+]
+
+[project.optional-dependencies]
+mojo = [
+    "mojo>=0.26.2.0",
 ]
 
 [[tool.uv.index]]
 url = "https://modular.gateway.scarf.sh/simple/"
 
+[tool.uv.sources]
+mojo = { index = "modular" }
