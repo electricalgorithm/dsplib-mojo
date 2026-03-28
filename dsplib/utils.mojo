@@ -3,6 +3,24 @@ from std.memory import alloc
 from .core import Complex
 
 
+fn allocate_buffer(
+    num_elements: Int,
+) -> UnsafePointer[Float64, MutExternalOrigin]:
+    """
+    Allocates a buffer of Float64 values initialized to zero.
+
+    Params:
+        num_elements: Number of Float64 elements to allocate.
+
+    Returns:
+        Pointer to the allocated buffer (must be freed by caller).
+    """
+    var buf = alloc[Float64](num_elements)
+    for i in range(num_elements):
+        buf[i] = 0.0
+    return buf
+
+
 @always_inline
 fn sign(x: Float64) -> Float64:
     """Returns the sign of x: 1.0 if x >= 0.0, -1.0 otherwise."""

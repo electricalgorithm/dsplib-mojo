@@ -36,6 +36,12 @@ mojo build -I . examples/06-signal-composition.mojo -o build/examples/06-signal-
 echo "Building Example 07: Signal-to-Noise Ratio..."
 mojo build -I . examples/07-snr.mojo -o build/examples/07-snr
 
+echo "Building Example 08: Audio I/O..."
+mojo build -I . examples/08-audio-io.mojo -o build/examples/08-audio-io
+
+echo "Building Example 09: Harmonics and Instrument Timbre..."
+mojo build -I . examples/09-harmonics.mojo -o build/examples/09-harmonics
+
 echo ""
 echo "========================================"
 echo "Build complete!"
@@ -49,6 +55,8 @@ echo "  build/examples/04-square-wave"
 echo "  build/examples/05-sawtooth-triangle"
 echo "  build/examples/06-signal-composition"
 echo "  build/examples/07-snr"
+echo "  build/examples/08-audio-io"
+echo "  build/examples/09-harmonics"
 echo ""
 echo "Run examples:"
 echo "  source .venv/bin/activate"
@@ -59,5 +67,7 @@ echo "  ./build/examples/04-square-wave"
 echo "  ./build/examples/05-sawtooth-triangle"
 echo "  ./build/examples/06-signal-composition"
 echo "  ./build/examples/07-snr"
+echo "  ./build/examples/08-audio-io"
+echo "  ./build/examples/09-harmonics"
 echo ""
 echo "Or run all with 'mojo -I . examples/*.mojo'"

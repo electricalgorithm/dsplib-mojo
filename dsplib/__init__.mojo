@@ -6,6 +6,7 @@ from .utils import (
     calculate_snr,
     calculate_noise_std_for_snr,
     add_noise_at_snr,
+    allocate_buffer,
 )
 from .waves import (
     WaveConfig,
@@ -28,3 +29,4 @@ from .plotting import (
     plot_unit_circle,
     plot_complex_points,
 )
+from .audio import write_wav, write_wav_mono, write_wav_stereo
