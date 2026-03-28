@@ -2,9 +2,13 @@ from .core import Complex
 from .utils import sign
 from .waves import (
     WaveConfig,
+    SawtoothWaveConfig,
+    TriangleWaveConfig,
     SquareWaveConfig,
     generate_sine_wave_raw,
     generate_cosine_wave_raw,
+    generate_sawtooth_wave_raw,
+    generate_triangle_wave_raw,
     generate_square_wave_raw,
     generate_random_normal_noise_raw,
     generate_random_uniform_noise_raw,

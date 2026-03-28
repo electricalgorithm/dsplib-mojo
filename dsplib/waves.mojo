@@ -1,4 +1,4 @@
-from std.math import sin, pi, iota, align_down
+from std.math import sin, abs, pi, iota, align_down
 from std.memory import alloc
 from std.random import rand, randn
 from .utils import sign
@@ -26,6 +26,50 @@ struct WaveConfig(ImplicitlyCopyable):
 
     def get_number_of_samples(self) -> Int:
         """Calculate and return number of samples."""
+        return Int(self.sample_rate_ss * self.duration_s)
+
+
+@fieldwise_init
+struct SawtoothWaveConfig(ImplicitlyCopyable):
+    """
+    Holds the configuration of a sawtooth wave function generator.
+
+    A sawtooth wave rises linearly from 0 to 2π, then wraps back to 0.
+    """
+
+    var frequency_hz: Float64
+    var amplitude: Float64
+    var phase_rad: Float64
+    var offset: Float64
+    var sample_rate_ss: Float64
+    var duration_s: Float64
+
+    fn get_angular_frequency(self) -> Float64:
+        return 2.0 * pi * self.frequency_hz / self.sample_rate_ss
+
+    fn get_number_of_samples(self) -> Int:
+        return Int(self.sample_rate_ss * self.duration_s)
+
+
+@fieldwise_init
+struct TriangleWaveConfig(ImplicitlyCopyable):
+    """
+    Holds the configuration of a triangle wave function generator.
+
+    A triangle wave rises and falls linearly, forming a triangular shape.
+    """
+
+    var frequency_hz: Float64
+    var amplitude: Float64
+    var phase_rad: Float64
+    var offset: Float64
+    var sample_rate_ss: Float64
+    var duration_s: Float64
+
+    fn get_angular_frequency(self) -> Float64:
+        return 2.0 * pi * self.frequency_hz / self.sample_rate_ss
+
+    fn get_number_of_samples(self) -> Int:
         return Int(self.sample_rate_ss * self.duration_s)
 
 
@@ -83,6 +127,79 @@ struct SineWave:
             )
             + self.wave_config.offset
         )
+        self.samples.store(i, values)
+
+
+@fieldwise_init
+struct SawtoothWave:
+    """A struct to calculate sawtooth waves with SIMD."""
+
+    var samples: UnsafePointer[Float64, MutExternalOrigin]
+    var config: SawtoothWaveConfig
+
+    @always_inline
+    fn generate[width: Int](self, i: Int):
+        # Create an array to store SIMD vector.
+        var indices: SIMD[DType.float64, width] = iota[
+            DType.float64, width
+        ]() + Float64(i)
+
+        # Calculate the angle.
+        var angle = (
+            indices * self.config.get_angular_frequency()
+            + self.config.phase_rad
+        )
+
+        # Scalars to represent 2pi and pi for calculations.
+        var two_pi = SIMD[DType.float64, width](2.0 * pi)
+        var one_pi = SIMD[DType.float64, width](pi)
+
+        # Calculate the values and store them.
+        # Range: 0 to 2, then shifted to -1 to 1
+        var sawtooth = (angle % two_pi) / one_pi - SIMD[DType.float64, width](
+            1.0
+        )
+        var values = self.config.amplitude * sawtooth + self.config.offset
+        self.samples.store(i, values)
+
+
+@fieldwise_init
+struct TriangleWave:
+    """A struct to calculate triangle waves with SIMD.
+
+    Triangle is generated from sawtooth using: 2 * |sawtooth - 1| - 1
+    This produces a wave in range [-1, 1] when amplitude=1 and offset=0.
+    """
+
+    var samples: UnsafePointer[Float64, MutExternalOrigin]
+    var config: TriangleWaveConfig
+
+    @always_inline
+    fn generate[width: Int](self, i: Int):
+        # Create an array to store SIMD vector.
+        var indices: SIMD[DType.float64, width] = iota[
+            DType.float64, width
+        ]() + Float64(i)
+
+        # Calculate the angle.
+        var angle = (
+            indices * self.config.get_angular_frequency()
+            + self.config.phase_rad
+        )
+
+        # Scalars to represent 2pi and pi for calculations.
+        var two_pi = SIMD[DType.float64, width](2.0 * pi)
+        var one_pi = SIMD[DType.float64, width](pi)
+
+        # Calculate the sawtooth, then transform to triangle.
+        # sawtooth: 0 to 2
+        # shifted: -1 to 1
+        # |shifted|: 0 to 1
+        # triangle: -1 to 1
+        var sawtooth = (angle % two_pi) / one_pi
+        var shifted = sawtooth - SIMD[DType.float64, width](1.0)
+        var triangle = abs(shifted) * 2.0 - SIMD[DType.float64, width](1.0)
+        var values = self.config.amplitude * triangle + self.config.offset
         self.samples.store(i, values)
 
 
@@ -182,6 +299,71 @@ def generate_cosine_wave_raw(
         wave_config.duration_s,
     )
     return generate_sine_wave_raw(cosine_config)
+
+
+def generate_sawtooth_wave_raw(
+    config: SawtoothWaveConfig,
+) -> UnsafePointer[Float64, MutExternalOrigin]:
+    """
+    Generates a sawtooth wave using SIMD instructions.
+
+    A sawtooth wave rises linearly from 0 to 2π, then wraps back to 0.
+
+    Params:
+      config: A SawtoothWaveConfig struct that holds signal parameters.
+
+    Returns:
+      An array of int(sample_rate * duration) samples.
+    """
+    var num_samples: Int = config.get_number_of_samples()
+
+    var samples = alloc[Float64](num_samples)
+
+    var wave = SawtoothWave(samples, config)
+
+    comptime simd_width = 8
+
+    var simd_end = Int(align_down(UInt(num_samples), UInt(simd_width)))
+    for i in range(0, simd_end, simd_width):
+        wave.generate[simd_width](i)
+
+    for i in range(simd_end, num_samples):
+        wave.generate[1](i)
+
+    return samples
+
+
+def generate_triangle_wave_raw(
+    config: TriangleWaveConfig,
+) -> UnsafePointer[Float64, MutExternalOrigin]:
+    """
+    Generates a triangle wave using SIMD instructions.
+
+    A triangle wave rises and falls linearly, forming a triangular shape.
+    Generated from sawtooth: 2 * |sawtooth - 1|
+
+    Params:
+      config: A TriangleWaveConfig struct that holds signal parameters.
+
+    Returns:
+      An array of int(sample_rate * duration) samples.
+    """
+    var num_samples: Int = config.get_number_of_samples()
+
+    var samples = alloc[Float64](num_samples)
+
+    var wave = TriangleWave(samples, config)
+
+    comptime simd_width = 8
+
+    var simd_end = Int(align_down(UInt(num_samples), UInt(simd_width)))
+    for i in range(0, simd_end, simd_width):
+        wave.generate[simd_width](i)
+
+    for i in range(simd_end, num_samples):
+        wave.generate[1](i)
+
+    return samples
 
 
 def generate_square_wave_raw(
