@@ -33,6 +33,9 @@ mojo build -I . examples/05-sawtooth-triangle.mojo -o build/examples/05-sawtooth
 echo "Building Example 06: Signal Composition..."
 mojo build -I . examples/06-signal-composition.mojo -o build/examples/06-signal-composition
 
+echo "Building Example 07: Signal-to-Noise Ratio..."
+mojo build -I . examples/07-snr.mojo -o build/examples/07-snr
+
 echo ""
 echo "========================================"
 echo "Build complete!"
@@ -45,6 +48,7 @@ echo "  build/examples/03-dft-unit-circle"
 echo "  build/examples/04-square-wave"
 echo "  build/examples/05-sawtooth-triangle"
 echo "  build/examples/06-signal-composition"
+echo "  build/examples/07-snr"
 echo ""
 echo "Run examples:"
 echo "  source .venv/bin/activate"
@@ -54,5 +58,6 @@ echo "  ./build/examples/03-dft-unit-circle"
 echo "  ./build/examples/04-square-wave"
 echo "  ./build/examples/05-sawtooth-triangle"
 echo "  ./build/examples/06-signal-composition"
+echo "  ./build/examples/07-snr"
 echo ""
 echo "Or run all with 'mojo -I . examples/*.mojo'"

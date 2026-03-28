@@ -1,5 +1,12 @@
 from .core import Complex
-from .utils import sign, generate_time_array
+from .utils import (
+    sign,
+    generate_time_array,
+    calculate_power,
+    calculate_snr,
+    calculate_noise_std_for_snr,
+    add_noise_at_snr,
+)
 from .waves import (
     WaveConfig,
     SawtoothWaveConfig,
