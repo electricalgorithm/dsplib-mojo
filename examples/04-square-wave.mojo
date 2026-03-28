@@ -5,10 +5,12 @@ def main() raises:
     print("Example 04: Square Wave Generation")
     print("=" * 40)
 
+    var sr = 44100.0
+
     print("\n1. Basic 50% duty cycle square wave...")
     var config_basic = dsplib.SquareWaveConfig(
         frequency_hz=440.0,
-        sample_rate_ss=44100.0,
+        sample_rate_ss=sr,
         duration_s=0.01,
         duty_cycle_perc=50.0,
         amplitude=1.0,
@@ -18,6 +20,7 @@ def main() raises:
     var wave_basic = dsplib.generate_square_wave_raw(config_basic)
     dsplib.plot_wave(
         wave_basic,
+        sr,
         config_basic.get_number_of_samples(),
         "square_wave_50pct.png",
     )
@@ -25,7 +28,7 @@ def main() raises:
     print("\n2. 75% duty cycle (spends more time HIGH)...")
     var config_75 = dsplib.SquareWaveConfig(
         frequency_hz=440.0,
-        sample_rate_ss=44100.0,
+        sample_rate_ss=sr,
         duration_s=0.01,
         duty_cycle_perc=75.0,
         amplitude=1.0,
@@ -34,13 +37,13 @@ def main() raises:
     )
     var wave_75 = dsplib.generate_square_wave_raw(config_75)
     dsplib.plot_wave(
-        wave_75, config_75.get_number_of_samples(), "square_wave_75pct.png"
+        wave_75, sr, config_75.get_number_of_samples(), "square_wave_75pct.png"
     )
 
     print("\n3. 25% duty cycle (spends more time LOW)...")
     var config_25 = dsplib.SquareWaveConfig(
         frequency_hz=440.0,
-        sample_rate_ss=44100.0,
+        sample_rate_ss=sr,
         duration_s=0.01,
         duty_cycle_perc=25.0,
         amplitude=1.0,
@@ -49,13 +52,13 @@ def main() raises:
     )
     var wave_25 = dsplib.generate_square_wave_raw(config_25)
     dsplib.plot_wave(
-        wave_25, config_25.get_number_of_samples(), "square_wave_25pct.png"
+        wave_25, sr, config_25.get_number_of_samples(), "square_wave_25pct.png"
     )
 
     print("\n4. Amplitude scaling (amplify by 2x)...")
     var config_amp = dsplib.SquareWaveConfig(
         frequency_hz=440.0,
-        sample_rate_ss=44100.0,
+        sample_rate_ss=sr,
         duration_s=0.01,
         duty_cycle_perc=50.0,
         amplitude=2.0,
@@ -64,13 +67,16 @@ def main() raises:
     )
     var wave_amp = dsplib.generate_square_wave_raw(config_amp)
     dsplib.plot_wave(
-        wave_amp, config_amp.get_number_of_samples(), "square_wave_2x_amp.png"
+        wave_amp,
+        sr,
+        config_amp.get_number_of_samples(),
+        "square_wave_2x_amp.png",
     )
 
     print("\n5. DC offset (shifted up by 1.0)...")
     var config_offset = dsplib.SquareWaveConfig(
         frequency_hz=440.0,
-        sample_rate_ss=44100.0,
+        sample_rate_ss=sr,
         duration_s=0.01,
         duty_cycle_perc=50.0,
         amplitude=1.0,
@@ -80,6 +86,7 @@ def main() raises:
     var wave_offset = dsplib.generate_square_wave_raw(config_offset)
     dsplib.plot_wave(
         wave_offset,
+        sr,
         config_offset.get_number_of_samples(),
         "square_wave_offset.png",
     )
@@ -87,7 +94,7 @@ def main() raises:
     print("\n6. Phase shift (shifted by pi/2 radians)...")
     var config_phase = dsplib.SquareWaveConfig(
         frequency_hz=440.0,
-        sample_rate_ss=44100.0,
+        sample_rate_ss=sr,
         duration_s=0.01,
         duty_cycle_perc=50.0,
         amplitude=1.0,
@@ -97,6 +104,7 @@ def main() raises:
     var wave_phase = dsplib.generate_square_wave_raw(config_phase)
     dsplib.plot_wave(
         wave_phase,
+        sr,
         config_phase.get_number_of_samples(),
         "square_wave_phase.png",
     )

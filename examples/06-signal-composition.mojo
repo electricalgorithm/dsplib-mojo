@@ -7,6 +7,7 @@ def main() raises:
 
     var sample_rate: Float64 = 44100.0
     var duration: Float64 = 0.02
+    var num_samples = Int(sample_rate * duration)
 
     print("\n1. Adding two sine waves (harmonics)...")
     var sine_440 = dsplib.WaveConfig(
@@ -27,9 +28,10 @@ def main() raises:
     )
     var wave_440 = dsplib.generate_sine_wave_raw(sine_440)
     var wave_880 = dsplib.generate_sine_wave_raw(sine_880)
-    var num_samples = sine_440.get_number_of_samples()
     var harmonics = dsplib.add_waves(wave_440, wave_880, num_samples)
-    dsplib.plot_wave(harmonics, num_samples, "composition_harmonics.png")
+    dsplib.plot_wave(
+        harmonics, sample_rate, num_samples, "composition_harmonics.png"
+    )
 
     print("\n2. Square wave + sine wave (filtered square approximation)...")
     var square_config = dsplib.SquareWaveConfig(
@@ -53,7 +55,10 @@ def main() raises:
     var wave_sine = dsplib.generate_sine_wave_raw(sine_config)
     var square_plus_sine = dsplib.add_waves(wave_square, wave_sine, num_samples)
     dsplib.plot_wave(
-        square_plus_sine, num_samples, "composition_square_sine.png"
+        square_plus_sine,
+        sample_rate,
+        num_samples,
+        "composition_square_sine.png",
     )
 
     print("\n3. Triangle + sawtooth (additive synthesis)...")
@@ -78,7 +83,9 @@ def main() raises:
     var tri_plus_saw = dsplib.add_waves(
         wave_triangle, wave_sawtooth, num_samples
     )
-    dsplib.plot_wave(tri_plus_saw, num_samples, "composition_triangle_saw.png")
+    dsplib.plot_wave(
+        tri_plus_saw, sample_rate, num_samples, "composition_triangle_saw.png"
+    )
 
     print(
         "\n4. Three-partial harmonic series (fundamental + 2nd + 3rd"
@@ -114,7 +121,10 @@ def main() raises:
     var temp = dsplib.add_waves(wave_h1, wave_h2, num_samples)
     var harmonic_series = dsplib.add_waves(temp, wave_h3, num_samples)
     dsplib.plot_wave(
-        harmonic_series, num_samples, "composition_harmonic_series.png"
+        harmonic_series,
+        sample_rate,
+        num_samples,
+        "composition_harmonic_series.png",
     )
 
     print("\n5. Sine + noise (SNR demonstration)...")
@@ -128,10 +138,12 @@ def main() raises:
     )
     var wave_clean = dsplib.generate_sine_wave_raw(clean_sine)
     var wave_noise = dsplib.generate_random_normal_noise_raw(
-        sample_rate, duration, mean=0.0, std_dev=0.2
+        sample_rate, duration, mean=0.0, std_dev=0.3
     )
     var noisy_signal = dsplib.add_waves(wave_clean, wave_noise, num_samples)
-    dsplib.plot_wave(noisy_signal, num_samples, "composition_sine_noise.png")
+    dsplib.plot_wave(
+        noisy_signal, sample_rate, num_samples, "composition_sine_noise.png"
+    )
 
     print("\n6. DC offset + AC signal (bias addition)...")
     var ac_config = dsplib.WaveConfig(
@@ -142,7 +154,7 @@ def main() raises:
         sample_rate_ss=sample_rate,
         duration_s=duration,
     )
-    var dc_offset = dsplib.WaveConfig(
+    var dc_config = dsplib.WaveConfig(
         frequency_hz=0.0,
         amplitude=0.0,
         phase_rad=0.0,
@@ -151,9 +163,11 @@ def main() raises:
         duration_s=duration,
     )
     var wave_ac = dsplib.generate_sine_wave_raw(ac_config)
-    var wave_dc = dsplib.generate_sine_wave_raw(dc_offset)
+    var wave_dc = dsplib.generate_sine_wave_raw(dc_config)
     var biased_signal = dsplib.add_waves(wave_ac, wave_dc, num_samples)
-    dsplib.plot_wave(biased_signal, num_samples, "composition_ac_dc_offset.png")
+    dsplib.plot_wave(
+        biased_signal, sample_rate, num_samples, "composition_ac_dc_offset.png"
+    )
 
     wave_440.free()
     wave_880.free()

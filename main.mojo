@@ -1,7 +1,6 @@
 import dsplib
 
 
-# The main entry function, could raise an exception.
 def main() raises:
     var wave_config = dsplib.WaveConfig(
         frequency_hz=440.0,
@@ -12,9 +11,10 @@ def main() raises:
         duration_s=0.05,
     )
 
-    # Implement a wave signal and save it.
     var wave_a = dsplib.generate_sine_wave_raw(wave_config)
-    dsplib.plot_wave(wave_a, wave_config.get_number_of_samples(), "wave_a.png")
+    dsplib.plot_wave(
+        wave_a, 44100.0, wave_config.get_number_of_samples(), "wave_a.png"
+    )
     wave_a.free()
 
     print("DSPLib is imported, and works great. Feel free to check examples!")

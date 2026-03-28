@@ -1,5 +1,5 @@
 from .core import Complex
-from .utils import sign
+from .utils import sign, generate_time_array
 from .waves import (
     WaveConfig,
     SawtoothWaveConfig,

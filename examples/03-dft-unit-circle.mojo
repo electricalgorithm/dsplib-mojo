@@ -174,7 +174,7 @@ def main() raises:
         "\n2. Generating a simple sine wave (2 complete cycles in N samples)..."
     )
     var wave = dsplib.generate_sine_wave_raw(config)
-    dsplib.plot_wave(wave, N, "wave_time_domain.png")
+    dsplib.plot_wave(wave, 44100.0, N, "wave_time_domain.png")
 
     print("\n3. Computing DFT to get frequency bins...")
     var dft_result = dsplib.compute_dft_raw(wave, N)

@@ -36,9 +36,11 @@ def main() raises:
     var wave_a_plus_b = dsplib.add_waves(wave_a, wave_b, num_samples)
 
     print("Plotting time domain waves...")
-    dsplib.plot_wave(wave_a, num_samples, "wave_a.png")
-    dsplib.plot_wave(wave_b, num_samples, "wave_b.png")
-    dsplib.plot_wave(wave_a_plus_b, num_samples, "wave_a_plus_b.png")
+    dsplib.plot_wave(wave_a, SAMPLE_RATE, num_samples, "wave_a.png")
+    dsplib.plot_wave(wave_b, SAMPLE_RATE, num_samples, "wave_b.png")
+    dsplib.plot_wave(
+        wave_a_plus_b, SAMPLE_RATE, num_samples, "wave_a_plus_b.png"
+    )
 
     print("Calculating and plotting frequency domains (DFT)...")
 

@@ -1,20 +1,29 @@
 from std.math import cos, sin, pi
 from std.python import Python
 from .core import Complex
+from .utils import generate_time_array
 
 
 def plot_wave(
     wave: UnsafePointer[Float64, MutExternalOrigin],
+    sample_rate: Float64,
     num_samples: Int,
     file_name: String,
+    title: String = "Waveform",
+    xlabel: String = "Time (s)",
+    ylabel: String = "Amplitude",
 ) raises:
     """
-    Plots a time-domain signal.
+    Plots a time-domain signal with proper time axis.
 
     Params:
       wave: Pointer to the signal samples.
+      sample_rate: Sample rate in samples per second.
       num_samples: Number of samples to plot.
       file_name: Output file name.
+      title: Plot title.
+      xlabel: X-axis label.
+      ylabel: Y-axis label.
     """
     var np = Python.import_module("numpy")
     var plt = Python.import_module("matplotlib.pyplot")
@@ -23,11 +32,17 @@ def plot_wave(
     for i in range(num_samples):
         out[i] = wave[i]
 
+    var time = generate_time_array(sample_rate, num_samples)
+    var time_np = np.empty(num_samples, dtype="float64")
+    for i in range(num_samples):
+        time_np[i] = time[i]
+    time.free()
+
     plt.figure()
-    plt.plot(out)
-    plt.title("Wave Diagram")
-    plt.xlabel("Samples")
-    plt.ylabel("Amplitude")
+    plt.plot(time_np, out)
+    plt.title(title)
+    plt.xlabel(xlabel)
+    plt.ylabel(ylabel)
     plt.grid(True)
     plt.savefig(file_name)
 
