@@ -1,8 +1,11 @@
 from .core import Complex
+from .utils import sign
 from .waves import (
     WaveConfig,
+    SquareWaveConfig,
     generate_sine_wave_raw,
     generate_cosine_wave_raw,
+    generate_square_wave_raw,
     generate_random_normal_noise_raw,
     generate_random_uniform_noise_raw,
     add_waves,
