@@ -162,3 +162,89 @@ fn compute_phase_spectrum(
         phases[i] = dft_output[i].phase()
 
     return (phases, num_positive)
+
+
+fn compute_power_spectrum(
+    dft_output: UnsafePointer[Complex, MutExternalOrigin],
+    num_samples: Int,
+) -> Tuple[UnsafePointer[Float64, MutExternalOrigin], Int]:
+    """
+    Computes the power spectrum from DFT output.
+
+    Power = |X[k]|^2 (magnitude squared)
+
+    For real-valued input signals, returns only positive frequencies.
+    Power is scaled by (2/N)^2 for k > 0 to account for negative frequencies.
+
+    Params:
+        dft_output: Pointer to the complex DFT output.
+        num_samples: Number of samples in the original DFT.
+
+    Returns:
+        A tuple of (power, num_bins).
+        Power is in squared magnitude units.
+        Caller must free the power pointer.
+    """
+    var num_positive = num_samples // 2 + 1
+    var power = alloc[Float64](num_positive)
+
+    for i in range(num_positive):
+        var mag = dft_output[i].magnitude()
+        if i > 0:
+            mag = mag * 2.0 / Float64(num_samples)
+        power[i] = mag * mag
+
+    return (power, num_positive)
+
+
+fn compute_spectral_energy(
+    dft_output: UnsafePointer[Complex, MutExternalOrigin],
+    num_samples: Int,
+) -> Float64:
+    """
+    Computes the total spectral energy from DFT output.
+
+    Uses Parseval's theorem: energy in time domain = energy in frequency domain
+
+    Energy = sum of |X[k]|^2 for all bins (not scaled)
+    This includes both positive and negative frequencies.
+
+    Params:
+        dft_output: Pointer to the complex DFT output.
+        num_samples: Number of samples in the original DFT.
+
+    Returns:
+        Total spectral energy.
+    """
+    var energy: Float64 = 0.0
+
+    for i in range(num_samples):
+        var mag = dft_output[i].magnitude()
+        energy = energy + (mag * mag)
+
+    return energy
+
+
+fn compute_time_domain_energy(
+    samples: UnsafePointer[Float64, MutExternalOrigin],
+    num_samples: Int,
+) -> Float64:
+    """
+    Computes the total energy in the time domain.
+
+    Energy = sum of |x[n]|^2 for all samples
+
+    Params:
+        samples: Pointer to the time-domain samples.
+        num_samples: Number of samples.
+
+    Returns:
+        Total time-domain energy.
+    """
+    var energy: Float64 = 0.0
+
+    for i in range(num_samples):
+        var sample = samples[i]
+        energy = energy + (sample * sample)
+
+    return energy

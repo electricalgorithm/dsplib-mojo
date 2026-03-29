@@ -27,6 +27,9 @@ from .fourier import (
     compute_idft_raw,
     compute_magnitude_spectrum,
     compute_phase_spectrum,
+    compute_power_spectrum,
+    compute_spectral_energy,
+    compute_time_domain_energy,
 )
 from .plotting import (
     plot_wave,
