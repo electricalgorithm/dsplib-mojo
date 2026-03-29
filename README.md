@@ -54,7 +54,3 @@ Run examples:
 $ ./build/examples/01-sine-wave-noise
 $ ./build/examples/11-spectrum-plots
 ```
-
-## License
-
-MIT
