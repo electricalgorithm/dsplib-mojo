@@ -75,9 +75,23 @@ compile_examples() {
 package_release() {
 	local pkg_name="dsplib-mojo"
 	local version=$(git describe --tags --abbrev=0 2>/dev/null || echo "latest")
-	local tar_name="${pkg_name}-${version}.tar.gz"
+
+	# Detect platform and architecture
+	local platform=$(uname -s | tr '[:upper:]' '[:lower:]')
+	local arch=$(uname -m)
+
+	# Normalize architecture names
+	case "$arch" in
+	x86_64) arch="x86_64" ;;
+	arm64 | aarch64) arch="arm64" ;;
+	*) arch="$arch" ;;
+	esac
+
+	local tar_name="${pkg_name}-${version}-${platform}-${arch}.tar.gz"
 
 	echo "Creating release package: ${tar_name}"
+	echo "  Platform: ${platform}"
+	echo "  Architecture: ${arch}"
 	echo ""
 
 	rm -rf build/release
