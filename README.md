@@ -1,34 +1,62 @@
 # dsplib-mojo
 
-An educational Digital Signal Processing (DSP) library built with **Mojo**. This project is designed to teach the fundamentals of signal processing—such -- while leveraging Mojo's high-performance features like SIMD.
+An educational Digital Signal Processing (DSP) library built with **Mojo**. This project is designed to teach the fundamentals of signal processing while leveraging Mojo's high-performance features like SIMD.
 
 > **Note:** This library is created for **educational purposes**. It prioritizes readability and fundamental implementations (like $O(N^2)$ DFT) over production-grade optimizations to help students and developers understand how DSP algorithms work under the hood.
 
 ## Project Structure
 
-The library is organized into logical submodules to separate core math, signal generation, and visualization:
+The library is organized into logical submodules:
 
-- **`dsplib.core`**: Fundamental types, including a custom `Complex` number struct.
-- **`dsplib.waves`**: SIMD-accelerated sine wave generation and various noise generators (Normal, Uniform).
-- **`dsplib.fourier`**: Discrete Fourier Transform (DFT) and Inverse DFT implementations.
-- **`dsplib.plotting`**: Visualization utilities powered by Python's `matplotlib` and `numpy`.
+| Module | Description |
+|--------|-------------|
+| `dsplib.core` | Custom `Complex` number struct with magnitude and phase |
+| `dsplib.waves` | SIMD-accelerated waveform generators (sine, sawtooth, triangle, square) and noise |
+| `dsplib.fourier` | DFT, FFT, and spectrum analysis functions |
+| `dsplib.windows` | Windowing functions for spectral analysis (Hann, Hamming, Blackman, etc.) |
+| `dsplib.plotting` | Visualization utilities using matplotlib |
+| `dsplib.audio` | WAV file writing utilities |
 
 ## Quick Start
 
-### Build 
-Clone the repository and install the necessary Python dependencies (`numpy`, `matplotlib`) into a virtual environment:
-
 ```bash
+# Create virtual environment and install dependencies
 $ uv venv
 $ source .venv/bin/activate
 $ uv sync
-$ ./build.sh
+
+# Full build (format + compile lib + tests + compile examples)
+$ ./build.sh release
+
+# Or build incrementally
+$ ./build.sh compile lib    # Compile library only
+$ ./build.sh tests          # Run unit tests
+$ ./build.sh compile examples  # Compile all examples
 ```
 
-After a successfull build, one can find the artifacts under `./build` directory.
+## Examples
 
-- `build/lib/dsplib.mojopkg`: The library to use in your Mojo projects.
-- `build/examples/*`: All example executables that showcases libraries functionality.
+| # | Example | Description |
+|---|---------|-------------|
+| 01 | `sine-wave-noise` | Basic sine wave generation with added Gaussian noise |
+| 02 | `dft-plots` | Visualize DFT bin magnitudes as bar charts |
+| 03 | `dft-unit-circle` | Plot DFT twiddle factors on the unit circle |
+| 04 | `square-wave` | Generate and visualize square waves |
+| 05 | `sawtooth-triangle` | Compare sawtooth and triangle waveforms |
+| 06 | `signal-composition` | Mix multiple sine waves into chords |
+| 07 | `snr` | Signal-to-Noise ratio calculation and visualization |
+| 08 | `audio-io` | Write synthesized audio to WAV files |
+| 09 | `harmonics` | Explore harmonic content of different waveforms |
+| 10 | `spectrum-analysis` | Magnitude and phase spectra visualization |
+| 11 | `spectrum-plots` | Frequency spectrum of sine, chord, and square waves |
+| 12 | `windowing` | Compare windowing functions (Hann, Hamming, Blackman, etc.) |
+
+Run examples:
+```bash
+$ ./build/examples/01-sine-wave-noise
+$ ./build/examples/11-spectrum-plots
+```
 
 ## License
+
 MIT
