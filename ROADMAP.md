@@ -70,10 +70,10 @@ A structured learning path for mastering Digital Signal Processing fundamentals 
 **Topics:**
 - [X] Discrete Fourier Transform (DFT) — O(N²) implementation
 - [X] Inverse DFT (IDFT) — signal reconstruction
-- [ ] Complex exponential basis functions $W_N^{kn} = e^{-j2\pi kn/N}$
-- [ ] Magnitude and phase spectra
-- [ ] Power spectrum and spectral energy
-- [ ] Parseval's theorem (energy conservation)
+- [S] Complex exponential basis functions $W_N^{kn} = e^{-j2\pi kn/N}$
+- [X] Magnitude and phase spectra
+- [X] Power spectrum and spectral energy
+- [X] Parseval's theorem (energy conservation)
 - [ ] Fast Fourier Transform (FFT) — O(N log N) implementation
 - [ ] Radix-2 Cooley-Tukey algorithm
 - [ ] Zero-padding for frequency resolution
