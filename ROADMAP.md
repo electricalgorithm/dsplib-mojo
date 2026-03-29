@@ -74,11 +74,10 @@ A structured learning path for mastering Digital Signal Processing fundamentals 
 - [X] Magnitude and phase spectra
 - [X] Power spectrum and spectral energy
 - [X] Parseval's theorem (energy conservation)
-- [ ] Fast Fourier Transform (FFT) — O(N log N) implementation
-- [ ] Radix-2 Cooley-Tukey algorithm
-- [ ] Zero-padding for frequency resolution
-- [ ] Windowing functions (Hann, Hamming, Blackman)
-- [ ] Spectral leakage and windowing tradeoffs
+- [X] Fast Fourier Transform (FFT) — O(N log N) implementation
+- [X] Zero-padding for frequency resolution
+- [X] Windowing functions (Hann, Hamming, Blackman)
+- [X] Spectral leakage and windowing tradeoffs
 
 **Exercises:**
 - DFT of a pure sine wave → verify single frequency peak
