@@ -40,7 +40,16 @@ from .fourier import (
 from .plotting import (
     plot_wave,
     plot_frequency_domain,
+    plot_fft_db,
     plot_unit_circle,
     plot_complex_points,
 )
 from .audio import write_wav, write_wav_mono, write_wav_stereo
+from .windows import (
+    generate_rectangular_window,
+    generate_hann_window,
+    generate_hamming_window,
+    generate_blackman_window,
+    generate_cosine_window,
+    apply_window,
+)

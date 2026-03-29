@@ -64,6 +64,12 @@ compile_examples() {
 
 	echo "Building Example 10: Magnitude and Phase Spectra..."
 	mojo build -I . examples/10-spectrum-analysis.mojo -o build/examples/10-spectrum-analysis
+
+	echo "Building Example 11: Spectrum Plots (Sine, Chord, Square)..."
+	mojo build -I . examples/11-spectrum-plots.mojo -o build/examples/11-spectrum-plots
+
+	echo "Building Example 12: Windowing Functions..."
+	mojo build -I . examples/12-windowing.mojo -o build/examples/12-windowing
 }
 
 package_release() {
