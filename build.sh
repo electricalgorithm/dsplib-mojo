@@ -2,12 +2,38 @@
 
 set -e
 
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+source "$SCRIPT_DIR/.venv/bin/activate"
+
+echo ""
+echo "========================================"
+echo "Formatting code with mojo format"
+echo "========================================"
+mojo format dsplib examples tests
+
+echo ""
+echo "========================================"
 echo "Creating build directories..."
+echo "========================================"
 mkdir -p build/lib
 mkdir -p build/examples
+mkdir -p build/tests
 
 echo "Packaging dsplib..."
 mojo package dsplib -o build/lib/dsplib.mojopkg
+
+echo ""
+echo "========================================"
+echo "Building and Running Tests"
+echo "========================================"
+
+echo ""
+echo "Running test_utils..."
+mojo run -I . tests/test_utils.mojo
+
+echo ""
+echo "Running test_fourier..."
+mojo run -I . tests/test_fourier.mojo
 
 echo ""
 echo "========================================"
@@ -62,5 +88,3 @@ echo "  ./build/examples/07-snr"
 echo "  ./build/examples/08-audio-io"
 echo "  ./build/examples/09-harmonics"
 echo "  ./build/examples/10-spectrum-analysis"
-echo ""
-echo "Or run all with 'mojo -I . examples/*.mojo'"

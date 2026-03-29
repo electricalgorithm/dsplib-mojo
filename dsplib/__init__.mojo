@@ -1,5 +1,10 @@
 from .core import Complex
 from .utils import (
+    is_power_of_2,
+    next_power_of_2,
+    pad_to_power_of_2,
+    reverse_bits,
+    bit_reverse_array,
     sign,
     generate_time_array,
     calculate_power,
@@ -25,6 +30,7 @@ from .waves import (
 from .fourier import (
     compute_dft_raw,
     compute_idft_raw,
+    compute_fft_recursive,
     compute_magnitude_spectrum,
     compute_phase_spectrum,
     compute_power_spectrum,

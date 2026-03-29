@@ -1,6 +1,7 @@
-from std.math import pi
+from std.math import pi, cos, sin
 from std.memory import alloc
 from .core import Complex
+from .utils import next_power_of_2, is_power_of_2
 
 
 def compute_dft_raw(
@@ -248,3 +249,126 @@ fn compute_time_domain_energy(
         energy = energy + (sample * sample)
 
     return energy
+
+
+fn _fft_recursive(
+    samples: UnsafePointer[Complex, MutExternalOrigin],
+    num_samples: Int,
+) -> UnsafePointer[Complex, MutExternalOrigin]:
+    """
+    Internal recursive FFT implementation using Cooley-Tukey decimation-in-time.
+
+    This is the divide-and-conquer step that splits the DFT into smaller parts.
+
+    Params:
+        samples: Pointer to complex input samples.
+        num_samples: Number of samples (must be power of 2).
+
+    Returns:
+        Complex FFT output.
+    """
+    # Base case: N = 1
+    if num_samples == 1:
+        var result = alloc[Complex](1)
+        result[0].re = samples[0].re
+        result[0].im = samples[0].im
+        return result
+
+    # Split into even and odd indices
+    var half_size = num_samples // 2
+    var even = alloc[Complex](half_size)
+    var odd = alloc[Complex](half_size)
+
+    for i in range(half_size):
+        even[i].re = samples[2 * i].re
+        even[i].im = samples[2 * i].im
+        odd[i].re = samples[2 * i + 1].re
+        odd[i].im = samples[2 * i + 1].im
+
+    # Recursively compute FFT of even and odd halves
+    var even_fft = _fft_recursive(even, half_size)
+    var odd_fft = _fft_recursive(odd, half_size)
+
+    # Free temporary arrays
+    even.free()
+    odd.free()
+
+    # Combine: butterfly operations with twiddle factors
+    var result = alloc[Complex](num_samples)
+
+    for k in range(half_size):
+        var twiddle_angle = -2.0 * pi * Float64(k) / Float64(num_samples)
+        var twiddle_re = cos(twiddle_angle)
+        var twiddle_im = sin(twiddle_angle)
+
+        var odd_re = odd_fft[k].re
+        var odd_im = odd_fft[k].im
+        var twiddled_re = twiddle_re * odd_re - twiddle_im * odd_im
+        var twiddled_im = twiddle_re * odd_im + twiddle_im * odd_re
+
+        result[k].re = even_fft[k].re + twiddled_re
+        result[k].im = even_fft[k].im + twiddled_im
+
+        result[k + half_size].re = even_fft[k].re - twiddled_re
+        result[k + half_size].im = even_fft[k].im - twiddled_im
+
+    # Free recursion results
+    even_fft.free()
+    odd_fft.free()
+
+    return result
+
+
+fn compute_fft_recursive(
+    samples: UnsafePointer[Float64, MutExternalOrigin],
+    num_samples: Int,
+) raises -> UnsafePointer[Complex, MutExternalOrigin]:
+    """
+    Computes Fast Fourier Transform using recursive Cooley-Tukey algorithm.
+
+    Complexity: O(N log N)
+
+    Params:
+        samples: Pointer to real-valued input samples.
+        num_samples: Number of samples.
+
+    Returns:
+        Complex FFT output.
+    """
+    var size = num_samples
+
+    # Check if padding is needed
+    if not is_power_of_2(size):
+        print("Warning: N =", size, "is not a power of 2.")
+        print("Padding to next power of 2.")
+
+        size = next_power_of_2(size)
+
+        var padded = alloc[Float64](size)
+        for i in range(num_samples):
+            padded[i] = samples[i]
+        for i in range(num_samples, size):
+            padded[i] = 0.0
+
+        var complex_samples = alloc[Complex](size)
+        for i in range(size):
+            complex_samples[i].re = padded[i]
+            complex_samples[i].im = 0.0
+
+        padded.free()
+
+        var fft_result = _fft_recursive(complex_samples, size)
+        complex_samples.free()
+
+        return fft_result
+
+    # Already power of 2: convert to complex and compute
+    var complex_samples = alloc[Complex](size)
+    for i in range(size):
+        complex_samples[i].re = samples[i]
+        complex_samples[i].im = 0.0
+
+    var fft_result = _fft_recursive(complex_samples, size)
+    complex_samples.free()
+
+    return fft_result
