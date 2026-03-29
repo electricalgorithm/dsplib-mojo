@@ -2,8 +2,6 @@
 
 An educational Digital Signal Processing (DSP) library built with **Mojo**. This project is designed to teach the fundamentals of signal processing while leveraging Mojo's high-performance features like SIMD.
 
-> **Note:** This library is created for **educational purposes**. It prioritizes readability and fundamental implementations (like $O(N^2)$ DFT) over production-grade optimizations to help students and developers understand how DSP algorithms work under the hood.
-
 ## Project Structure
 
 The library is organized into logical submodules:
