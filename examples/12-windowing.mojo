@@ -29,7 +29,7 @@ The Solution: Windowing
     This reduces the discontinuity, reducing leakage.
 
 This example generates a 440 Hz sine wave and shows how different
-windows affect the resulting spectrum using the plot_fft_db function
+windows affect the resulting spectrum using the plot_spectrum_db function
 with built-in window support.
 """
 
@@ -114,12 +114,12 @@ def main() raises:
 
     print("")
     print(
-        "Plotting spectra with different windows (using plot_fft_db with window"
-        " parameter)..."
+        "Plotting spectra with different windows (using plot_spectrum_db with"
+        " window parameter)..."
     )
 
     print("  - Rectangular (no windowing)...")
-    dsplib.plot_fft_db(
+    dsplib.plot_spectrum_db(
         signal,
         num_samples,
         sample_rate,
@@ -128,7 +128,7 @@ def main() raises:
     )
 
     print("  - Hann window...")
-    dsplib.plot_fft_db(
+    dsplib.plot_spectrum_db(
         signal,
         num_samples,
         sample_rate,
@@ -138,7 +138,7 @@ def main() raises:
     )
 
     print("  - Hamming window...")
-    dsplib.plot_fft_db(
+    dsplib.plot_spectrum_db(
         signal,
         num_samples,
         sample_rate,
@@ -148,7 +148,7 @@ def main() raises:
     )
 
     print("  - Blackman window...")
-    dsplib.plot_fft_db(
+    dsplib.plot_spectrum_db(
         signal,
         num_samples,
         sample_rate,
@@ -158,7 +158,7 @@ def main() raises:
     )
 
     print("  - Cosine window...")
-    dsplib.plot_fft_db(
+    dsplib.plot_spectrum_db(
         signal,
         num_samples,
         sample_rate,

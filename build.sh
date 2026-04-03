@@ -30,6 +30,10 @@ run_tests() {
 	echo ""
 	echo "Running test_fourier..."
 	mojo run -I . tests/test_fourier.mojo
+
+	echo ""
+	echo "Running test_plotting..."
+	mojo run -I . tests/test_plotting.mojo
 }
 
 compile_examples() {
@@ -70,6 +74,9 @@ compile_examples() {
 
 	echo "Building Example 12: Windowing Functions..."
 	mojo build -I . examples/12-windowing.mojo -o build/examples/12-windowing
+
+	echo "Building Example 13: Bode Plots..."
+	mojo build -I . examples/13-bode-plots.mojo -o build/examples/13-bode-plots
 }
 
 package_release() {

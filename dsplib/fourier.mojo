@@ -561,38 +561,17 @@ fn compute_fft_recursive(
     """
     var size = num_samples
 
-    # Pad to power of 2 if necessary
+    # Pad to power of 2 if necessary (radix-2 FFT requirement)
     if not is_power_of_2(size):
-        print("Warning: N =", size, "is not a power of 2.")
-        print("Padding to next power of 2.")
-
         size = next_power_of_2(size)
 
-        # Copy original samples and zero-pad
-        var padded = alloc[Float64](size)
-        for i in range(num_samples):
-            padded[i] = samples[i]
-        for i in range(num_samples, size):
-            padded[i] = 0.0
-
-        # Convert real to complex (imaginary part = 0)
-        var complex_samples = alloc[Complex](size)
-        for i in range(size):
-            complex_samples[i].re = padded[i]
-            complex_samples[i].im = 0.0
-
-        padded.free()
-
-        # Compute FFT
-        var fft_result = _fft_recursive(complex_samples, size)
-        complex_samples.free()
-
-        return fft_result
-
-    # Already power of 2: convert to complex and compute
+    # Convert real samples to complex, zero-padding if needed
     var complex_samples = alloc[Complex](size)
     for i in range(size):
-        complex_samples[i].re = samples[i]
+        if i < num_samples:
+            complex_samples[i].re = samples[i]
+        else:
+            complex_samples[i].re = 0.0
         complex_samples[i].im = 0.0
 
     var fft_result = _fft_recursive(complex_samples, size)

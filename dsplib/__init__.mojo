@@ -40,7 +40,12 @@ from .fourier import (
 from .plotting import (
     plot_wave,
     plot_frequency_domain,
-    plot_fft_db,
+    plot_spectrum_db,
+    plot_bode_magnitude,
+    plot_bode_phase,
+    plot_bode,
+    plot_bode_combined,
+    compute_bode_response,
     plot_unit_circle,
     plot_complex_points,
 )

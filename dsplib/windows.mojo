@@ -202,11 +202,10 @@ fn generate_cosine_window(
     return window
 
 
-fn apply_window[
-    num_samples: Int
-](
+fn apply_window(
     signal: UnsafePointer[Float64, MutExternalOrigin],
     window: UnsafePointer[Float64, MutExternalOrigin],
+    num_samples: Int,
 ) -> UnsafePointer[Float64, MutExternalOrigin]:
     """
     Applies a window function to a signal.
