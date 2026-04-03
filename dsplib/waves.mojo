@@ -456,23 +456,23 @@ def generate_sine_wave_raw(
     Mathematical Definition:
         x[n] = A * sin(2πfn/fs + φ) + DC
 
-    Parameters:
+    Args:
         wave_config: Configuration struct containing:
-            - frequency_hz: Frequency in Hz (e.g., 440 for A4)
-            - amplitude: Peak amplitude (e.g., 1.0 for full scale)
-            - phase_rad: Phase offset in radians (e.g., 0, π/2)
-            - offset: DC offset (usually 0)
-            - sample_rate_ss: Samples per second (e.g., 44100)
-            - duration_s: Duration in seconds
+            - frequency_hz: Frequency in Hz (e.g., 440 for A4).
+            - amplitude: Peak amplitude (e.g., 1.0 for full scale).
+            - phase_rad: Phase offset in radians (e.g., 0, π/2).
+            - offset: DC offset (usually 0).
+            - sample_rate_ss: Samples per second (e.g., 44100).
+            - duration_s: Duration in seconds.
 
     Returns:
         Pointer to array of samples. Caller must free with .free().
 
     Example:
-        config = WaveConfig(frequency_hz=440.0, amplitude=1.0, ...)
+        config = WaveConfig(frequency_hz=440.0, amplitude=1.0)
         samples = generate_sine_wave_raw(config)
         # Use samples...
-        samples.free()
+        samples.free()  # doctest: +SKIP
     """
     var num_samples: Int = wave_config.get_number_of_samples()
     var samples = alloc[Float64](num_samples)
@@ -666,22 +666,22 @@ def generate_random_normal_noise_raw(
         - μ (mean) = average value
         - σ² (variance) = spread of values
 
-    Parameters:
-        sample_rate: Samples per second (e.g., 44100)
-        duration: Duration in seconds
-        mean: Average value (usually 0 for audio)
-        std_dev: Standard deviation (controls amplitude spread)
+    Args:
+        sample_rate: Samples per second (e.g., 44100).
+        duration: Duration in seconds.
+        mean: Average value (usually 0 for audio).
+        std_dev: Standard deviation (controls amplitude spread).
 
     Statistical Properties:
-        - 68% of samples within ±1σ
-        - 95% of samples within ±2σ
-        - 99.7% of samples within ±3σ
+        - 68% of samples within ±1σ.
+        - 95% of samples within ±2σ.
+        - 99.7% of samples within ±3σ.
 
     Uses:
-        - Audio testing and measurement
-        - Adding controlled noise to signals
-        - Simulating thermal/electronic noise
-        - Stochastic processes
+        - Audio testing and measurement.
+        - Adding controlled noise to signals.
+        - Simulating thermal/electronic noise.
+        - Stochastic processes.
     """
     var num_samples = Int(sample_rate * duration)
     var samples = alloc[Float64](num_samples)

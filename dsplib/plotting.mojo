@@ -149,7 +149,7 @@ def plot_wave(
         - Sample 0 is at t = 0/44100 = 0.0 seconds
         - Sample 441 is at t = 441/44100 = 0.01 seconds (1/100th second)
 
-    Parameters:
+    Args:
         wave: Pointer to the signal samples.
         sample_rate: Sample rate in samples per second (Hz).
         num_samples: Number of samples to plot.
@@ -229,7 +229,7 @@ def plot_frequency_domain(
         2. Number of samples N
         3. Window function (if used)
 
-    Parameters:
+    Args:
         bins: Pointer to complex FFT output (N complex numbers).
         num_samples: Number of FFT bins (N).
         sample_rate: Sample rate in Hz.
@@ -308,16 +308,13 @@ def plot_spectrum_db(
     For White Noise:
         Flat spectrum (equal energy at all frequencies)
 
-    Parameters:
+    Args:
         signal: Pointer to time-domain signal.
         num_samples: Number of samples (N).
         sample_rate: Sample rate in Hz.
         file_name: Output file path.
         title: Plot title.
         window: Optional window function for leakage reduction.
-                Windowing trades off between:
-                - Main lobe width (resolution)
-                - Sidelobe level (dynamic range)
         freq_scale: "linear" (default) or "log" for log frequency axis.
 
     dB Calculation:
@@ -531,9 +528,9 @@ fn compute_bode_response[
         This gives equal visual space to equal frequency ratios:
         - 20 Hz to 200 Hz (10x) gets same width as 2 kHz to 20 kHz (10x)
 
-    Parameters:
+    Args:
         signal: Pointer to time-domain signal (impulse response h[n]).
-                For a unity-gain system, use an impulse: signal[0] = 1
+                For a unity-gain system, use an impulse: signal[0] = 1.
         num_samples: Number of samples in signal (N).
         sample_rate: Sample rate in Hz (e.g., 44100 for audio).
 
@@ -561,10 +558,10 @@ fn compute_bode_response[
     Educational Note:
         This function computes |H(jω)| and ∠H(jω) from the impulse response.
         The impulse response h[n] completely characterizes a linear system:
-        - Any input can be expressed as sum of impulses
-        - Each impulse produces h[n] shifted in time
-        - The output is convolution: y[n] = x[n] * h[n]
-        - In frequency domain: Y(ω) = X(ω) * H(ω)
+        - Any input can be expressed as sum of impulses.
+        - Each impulse produces h[n] shifted in time.
+        - The output is convolution: y[n] = x[n] * h[n].
+        - In frequency domain: Y(ω) = X(ω) * H(ω).
     """
     # Allocate arrays for frequency response
     var frequencies = alloc[Float64](num_points)
@@ -702,7 +699,7 @@ def plot_bode_magnitude[
         -20 dB: 10x voltage attenuation
         -60 dB: near noise floor
 
-    Parameters:
+    Args:
         signal: Pointer to time-domain signal (impulse response).
         num_samples: Number of samples in signal.
         sample_rate: Sample rate in Hz.
@@ -710,9 +707,9 @@ def plot_bode_magnitude[
         title: Plot title.
         window: Optional window function pointer for leakage reduction.
                 Common choices:
-                    - Hann window: good general purpose
-                    - Hamming window: slightly better for sinusoids
-                    - Blackman window: sharper main lobe
+                    - Hann window: good general purpose.
+                    - Hamming window: slightly better for sinusoids.
+                    - Blackman window: sharper main lobe.
 
     Example:
         # Plot magnitude of a lowpass filter
@@ -823,7 +820,7 @@ def plot_bode_phase[
         Phase should be 0° at all frequencies (linear phase).
         Any deviation means the system delays some frequencies more.
 
-    Parameters:
+    Args:
         signal: Pointer to time-domain signal.
         num_samples: Number of samples.
         sample_rate: Sample rate in Hz.
@@ -938,7 +935,7 @@ def plot_bode[
             - Same magnitude can have different phases
             - Phase affects signal shape and timing
 
-    Parameters:
+    Args:
         signal: Pointer to time-domain signal.
         num_samples: Number of samples.
         sample_rate: Sample rate in Hz.
@@ -1057,7 +1054,7 @@ def plot_bode_magnitude(
     Use this when you already have computed the frequency response
     using compute_bode_response() and want to plot just the magnitude.
 
-    Parameters:
+    Args:
         frequencies: Array of frequencies in Hz (log-spaced).
         magnitude_db: Array of magnitude values in dB.
         num_points: Number of data points.
@@ -1097,7 +1094,7 @@ def plot_bode_phase(
     """
     Plots Bode phase from pre-computed data.
 
-    Parameters:
+    Args:
         frequencies: Array of frequencies in Hz.
         phase_deg: Array of phase values in degrees.
         num_points: Number of data points.
@@ -1146,7 +1143,7 @@ def plot_bode_combined(
     """
     Plots combined Bode magnitude and phase from pre-computed data.
 
-    Parameters:
+    Args:
         frequencies: Array of frequencies in Hz.
         magnitude_db: Array of magnitude values in dB.
         phase_deg: Array of phase values in degrees.
@@ -1231,7 +1228,7 @@ def plot_unit_circle(
         DFT bin k "correlates" with frequency k/N of the unit circle.
         At bin k, we multiply signal by W_N^k and sum.
 
-    Parameters:
+    Args:
         num_points: Number of points to plot around the circle (e.g., 8, 16).
         file_name: Output file name.
         title: Plot title.
@@ -1289,7 +1286,7 @@ def plot_complex_points(
         - See how adding complex numbers creates constructive/destructive interference
         - Understand phase relationships between frequency components
 
-    Parameters:
+    Args:
         points: Pointer to array of complex numbers.
         num_points: Number of points to plot.
         file_name: Output file name.

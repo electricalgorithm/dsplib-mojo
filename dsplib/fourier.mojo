@@ -59,30 +59,30 @@ def compute_dft_raw(
         - At n=N: angle = 2π (back to start, one complete rotation)
         - k controls how fast it spins (higher k = faster spin)
 
-    Parameters:
-        samples: Pointer to N time-domain samples x[n]
-        num_samples: Number of samples N
+    Args:
+        samples: Pointer to N time-domain samples x[n].
+        num_samples: Number of samples N.
 
     Returns:
         Complex array X[k] of length N, where:
             - X[k].re = magnitude * cos(phase)
             - X[k].im = magnitude * sin(phase)
             - magnitude = sqrt(re² + im²)
-            - phase = atan2(im, re)
+            - phase = atan2(im, re).
 
     How It Works:
         For each frequency bin k:
-            1. Create a "spinning probe" at frequency f_k
-            2. Multiply every sample by the probe at its time instant
-            3. Sum up all these products
+            1. Create a "spinning probe" at frequency f_k.
+            2. Multiply every sample by the probe at its time instant.
+            3. Sum up all these products.
             4. If the signal has frequency f_k, the sum will be large
-               (constructive interference)
+               (constructive interference).
             5. If the signal doesn't have f_k, the sum will be small
-               (destructive interference)
+               (destructive interference).
 
     Example:
-        Input: 1024 samples at 44100 Hz
-        Output: 1024 bins, each representing 44100/1024 ≈ 43 Hz
+        Input: 1024 samples at 44100 Hz.
+        Output: 1024 bins, each representing 44100/1024 ≈ 43 Hz.
 
         Bin 0:   0 Hz (DC, average value)
         Bin 10:  430 Hz
@@ -90,7 +90,7 @@ def compute_dft_raw(
         Bin 512: 22050 Hz (Nyquist, highest detectable frequency)
 
     Complexity: O(N²) - for N=1024, that's ~1 million operations.
-    Use FFT for large N!
+    Use FFT for large N.
     """
     var results: UnsafePointer[Complex, MutExternalOrigin] = alloc[Complex](
         num_samples
@@ -145,18 +145,18 @@ def compute_idft_raw(
         The DFT has N terms in the sum, so the IDFT needs 1/N
         to be a true inverse. Without it, x[n] would be N times too large.
 
-    Parameters:
-        freq_bins: Pointer to complex frequency bins X[k]
-        num_samples: Number of samples N
+    Args:
+        freq_bins: Pointer to complex frequency bins X[k].
+        num_samples: Number of samples N.
 
     Returns:
-        Complex time-domain signal x[n]
+        Complex time-domain signal x[n].
 
     The Complete Picture:
         DFT:  x[n] ---> X[k]  (analysis, finding frequencies)
         IDFT: X[k] ---> x[n]  (synthesis, building from frequencies)
 
-        DFT + IDFT = identity (with proper normalization)
+        DFT + IDFT = identity (with proper normalization).
     """
     var results: UnsafePointer[Complex, MutExternalOrigin] = alloc[Complex](
         num_samples
@@ -225,13 +225,13 @@ fn compute_magnitude_spectrum(
             to conserve total energy. Dividing by N is standard
             DFT normalization.
 
-    Parameters:
-        dft_output: Complex DFT output X[k]
-        num_samples: Original sample count N
+    Args:
+        dft_output: Complex DFT output X[k].
+        num_samples: Original sample count N.
 
     Returns:
-        Tuple of (magnitudes array, num_magnitudes)
-        magnitudes[k] = |X[k]| * 2/N for k > 0
+        Tuple of (magnitudes array, num_magnitudes).
+        magnitudes[k] = |X[k]| * 2/N for k > 0.
     """
     # Positive frequencies only: 0 to Nyquist (fs/2)
     # Plus one includes both endpoints
@@ -525,12 +525,12 @@ fn compute_fft_recursive(
 
         Speedup: ~100x for N=1024, ~1000x for N=1024!
 
-    Parameters:
-        samples: Pointer to real-valued time-domain samples
-        num_samples: Number of samples N
+    Args:
+        samples: Pointer to real-valued time-domain samples.
+        num_samples: Number of samples N.
 
     Returns:
-        Complex frequency domain representation
+        Complex frequency domain representation.
 
     Power of 2 Requirement:
         The radix-2 FFT requires N to be a power of 2.
@@ -545,11 +545,11 @@ fn compute_fft_recursive(
             k = N-1:    -fs/N (just below 0 Hz)
 
         For real input signals, X[k] and X[N-k] are complex conjugates:
-            X[N-k] = conj(X[k])
+            X[N-k] = conj(X[k]).
 
     Example:
-        Input:  1024 samples at 44100 Hz
-        Output: 1024 frequency bins
+        Input:  1024 samples at 44100 Hz.
+        Output: 1024 frequency bins.
 
         Bin 0:   0 Hz (DC)
         Bin 10:  430 Hz
