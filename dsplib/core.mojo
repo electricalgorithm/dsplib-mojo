@@ -129,3 +129,21 @@ struct Complex(Copyable, Movable):
             The angle in radians from the positive real axis to this point.
         """
         return atan2(self.im, self.re)
+
+    @always_inline
+    fn __truediv__(self, other: Complex) -> Complex:
+        """Divides this Complex number by another.
+
+        (a + bi) / (c + di) = (ac + bd)/(c²+d²) + (bc - ad)/(c²+d²)i
+
+        Args:
+            other: The Complex number to divide by.
+
+        Returns:
+            A new Complex representing the quotient.
+        """
+        var denom = other.re * other.re + other.im * other.im
+        return Complex(
+            (self.re * other.re + self.im * other.im) / denom,
+            (self.im * other.re - self.re * other.im) / denom,
+        )

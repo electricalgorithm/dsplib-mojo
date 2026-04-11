@@ -75,3 +75,70 @@ below than 1 to not amplify the signal indefinetly. On the other hand,
 zeros can be anything since they do not affect the signal based on their
 finite behaviour.
 """
+from std.math import sin, cos, pi
+from .core import Complex
+
+
+fn evaluate_polynomial(
+    coeffs: List[Float64], omega: Float64, r: Float64
+) -> Complex:
+    """
+    Evaluate a given polynomial for a frequency given.
+
+    Args:
+      - coeffs: List of coefficients of the polynomials.
+      - omega: The frequency in rad/s of the z-variable.
+      - r: The radius of the z-variable.
+
+    Returns:
+      Complex: The result of the polynomial.
+    """
+    var real_part: Float64 = 0.0
+    var imag_part: Float64 = 0.0
+
+    # Calculate the function using z-polynomials.
+    # a0 + a1 * z^(-1) + a2 * z^(-2) + ...
+    # where z^(-k) = r^(-k) * e^(-jwk).
+    # We can rewrite it using Euler's Formula.
+    # e^(-j*x) = cos(x) - j sin(x)
+    # So,
+    # z^(-k) = r^(-k) * (cos(wk) - j sin(wk))
+    # z^(-k) = r^(-k) * cos(wk) - j * r^(-k) * sin(wk)
+    for k in range(len(coeffs)):
+        var r_k = r ** Float64(-k)
+        var angle = omega * Float64(k)
+        real_part += coeffs[k] * r_k * cos(angle)
+        imag_part += coeffs[k] * r_k * sin(angle)
+
+    return Complex(real_part, -imag_part)
+
+
+fn freqz(
+    a_coeff: List[Float64], b_coeff: List[Float64], num_points: Int = 512
+) -> Tuple[List[Float64], List[Complex]]:
+    """
+    Calculate the frequency response from the transfer function coefficients.
+
+    Args:
+      - a_coeff: List of a_n coefficients.
+      - b_coeff: List of b_n coefficients.
+      - num_points: Number of frequency points to evaluate.
+
+    Returns:
+        Tuple[List[Float64], List[Complex]]: The function returns two lists. The first
+        one is the frequencies. The second one are the list of complex data which are
+        the frequency responses.
+    """
+    var frequencies = List[Float64]()
+    var responses = List[Complex]()
+
+    # We go for num_points in frequency.
+    # Each iteration calcualtes a different omega.
+    for i in range(num_points):
+        var omega = pi * Float64(i) / Float64(num_points - 1)
+        var b_val = evaluate_polynomial(b_coeff, omega, 1.0)
+        var a_val = evaluate_polynomial(a_coeff, omega, 1.0)
+        frequencies.append(omega)
+        responses.append(b_val / a_val)
+
+    return (frequencies^, responses^)

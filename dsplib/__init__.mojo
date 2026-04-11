@@ -58,3 +58,4 @@ from .windows import (
     generate_cosine_window,
     apply_window,
 )
+from .filters import freqz

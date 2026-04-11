@@ -32,6 +32,10 @@ run_tests() {
 	mojo run -I . tests/test_fourier.mojo
 
 	echo ""
+	echo "Running test_filters..."
+	mojo run -I . tests/test_filters.mojo
+
+	echo ""
 	echo "Running test_plotting..."
 	mojo run -I . tests/test_plotting.mojo
 }
