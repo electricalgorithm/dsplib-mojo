@@ -81,6 +81,9 @@ compile_examples() {
 
 	echo "Building Example 13: Bode Plots..."
 	mojo build -I . examples/13-bode-plots.mojo -o build/examples/13-bode-plots
+
+  echo "Building Example 14: freqz() Usage..."
+	mojo build -I . examples/14-freqz.mojo -o build/examples/14-freqz
 }
 
 package_release() {
