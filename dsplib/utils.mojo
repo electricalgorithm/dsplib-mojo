@@ -1,4 +1,4 @@
-from std.math import log10, sqrt
+from std.math import log10, sqrt, pi
 from std.memory import alloc
 from .core import Complex
 
@@ -255,3 +255,50 @@ fn add_noise_at_snr(
     )
 
     return result
+
+
+fn omega_to_hz(omega: Float64, sample_rate: Float64) -> Float64:
+    """
+    Converts angular frequency (omega) to frequency in Hz.
+
+    The relationship between angular frequency and frequency is:
+        omega = 2 * pi * f
+
+    Args:
+        omega: Angular frequency in radians per sample.
+        sample_rate: Sample rate in samples per second (Hz).
+
+    Returns:
+        Frequency in Hz.
+
+    Example:
+        omega = pi (Nyquist) at fs=44100 → f = 22050 Hz
+    """
+    return omega * sample_rate / (2.0 * pi)
+
+
+fn magnitude_to_db(magnitude: Float64, floor: Float64 = -100.0) -> Float64:
+    """
+    Converts magnitude to decibels (dB).
+
+    dB = 20 * log10(|magnitude|)
+
+    For magnitudes near zero, this function returns a floor value to avoid
+    -infinity results.
+
+    Args:
+        magnitude: The linear magnitude value (non-negative).
+        floor: Minimum dB value to return for very small magnitudes.
+               Defaults to -100.0 dB.
+
+    Returns:
+        Magnitude in decibels.
+
+    Example:
+        magnitude = 1.0  → 0 dB
+        magnitude = 0.5  → -6 dB
+        magnitude = 0.1  → -20 dB
+    """
+    if magnitude < 1e-10:
+        return floor
+    return 20.0 * log10(magnitude)

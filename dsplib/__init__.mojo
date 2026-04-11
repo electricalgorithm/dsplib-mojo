@@ -12,6 +12,8 @@ from .utils import (
     calculate_noise_std_for_snr,
     add_noise_at_snr,
     allocate_buffer,
+    omega_to_hz,
+    magnitude_to_db,
 )
 from .waves import (
     WaveConfig,
